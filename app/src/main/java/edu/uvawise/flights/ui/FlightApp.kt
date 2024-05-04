@@ -1,15 +1,18 @@
 package edu.uvawise.flights.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,9 +23,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import edu.uvawise.flights.R
+import edu.uvawise.flights.ui.screens.ErrorScreen
+import edu.uvawise.flights.ui.screens.ResultsScreen
+import edu.uvawise.flights.ui.screens.StartScreen
 
 enum class FlightScreen(@StringRes val title: Int) {
-    Start(R.string.start_screen_title)
+    Start(R.string.start_screen_title),
+    Results(R.string.results_title),
+    Error(R.string.nothing_found_title),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,6 +45,9 @@ fun FlightAppTopBar(
         title = {
             Text("Flight Wise", maxLines = 1) // TODO convert to StringRes
         },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+          containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack) {
@@ -69,17 +80,29 @@ fun FlightApp(
             )
         }
     ) { innerPadding ->
-
         NavHost(
             navController = navController,
             startDestination = FlightScreen.Start.name,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                //.padding(innerPadding)
+                .fillMaxSize()
         ) {
             composable(route = FlightScreen.Start.name) {
                 StartScreen(
-                    modifier = Modifier, // TODO add margins here.
-                    onFlightSearch = { }
+                    modifier = Modifier.padding(innerPadding),
+                    onSearchSubmit = { date, name, num ->
+                        // TODO search for flight
+                        //      Conduct a flight search and get the results into the
+                        //      result screen somehow.
+                        navController.navigate(FlightScreen.Results.name)
+                    }
                 )
+            }
+            composable(route = FlightScreen.Results.name) {
+                ResultsScreen()
+            }
+            composable(route = FlightScreen.Error.name) {
+                ErrorScreen()
             }
         }
     }
