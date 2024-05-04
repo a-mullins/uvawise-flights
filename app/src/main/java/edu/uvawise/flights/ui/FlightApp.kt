@@ -113,7 +113,7 @@ fun FlightApp(
                 )
             }
             composable(route = FlightScreen.Results.name) {
-                Log.d(TAG, String.format("date: %s\nname: %s\nflight: %s", dateStr, airlineName, flightNumber))
+                Log.d(TAG, String.format("  date: %s\n  name: %s\nflight: %s", dateStr, airlineName, flightNumber))
                 ResultsScreen(
                     dateStr,
                     airlineName,
@@ -125,7 +125,6 @@ fun FlightApp(
             }
         }
     }
-
 }
 
 @Preview
