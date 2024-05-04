@@ -1,5 +1,6 @@
 package edu.uvawise.flights.ui
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -26,6 +29,10 @@ import edu.uvawise.flights.R
 import edu.uvawise.flights.ui.screens.ErrorScreen
 import edu.uvawise.flights.ui.screens.ResultsScreen
 import edu.uvawise.flights.ui.screens.StartScreen
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+
+const private val TAG = "FlightApp.kt"
 
 enum class FlightScreen(@StringRes val title: Int) {
     Start(R.string.start_screen_title),
@@ -71,6 +78,10 @@ fun FlightApp(
         backStackEntry?.destination?.route ?: FlightScreen.Start.name
     )
 
+    var dateStr by rememberSaveable { mutableStateOf("") }
+    var airlineName by rememberSaveable { mutableStateOf("") }
+    var flightNumber by rememberSaveable { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             FlightAppTopBar(
@@ -94,12 +105,20 @@ fun FlightApp(
                         // TODO search for flight
                         //      Conduct a flight search and get the results into the
                         //      result screen somehow.
+                        dateStr = date
+                        airlineName = name
+                        flightNumber = num
                         navController.navigate(FlightScreen.Results.name)
                     }
                 )
             }
             composable(route = FlightScreen.Results.name) {
-                ResultsScreen()
+                Log.d(TAG, String.format("date: %s\nname: %s\nflight: %s", dateStr, airlineName, flightNumber))
+                ResultsScreen(
+                    dateStr,
+                    airlineName,
+                    flightNumber
+                )
             }
             composable(route = FlightScreen.Error.name) {
                 ErrorScreen()

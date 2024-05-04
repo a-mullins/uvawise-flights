@@ -11,7 +11,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ResultsScreen() {
+fun ResultsScreen(
+    date: String,
+    airlineName: String,
+    flightNumber: String
+) {
     // TODO stub
     Column(
         modifier = Modifier.fillMaxSize(),
